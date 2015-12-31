@@ -1,0 +1,33 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/foods.png</file>
+        <file>images/label.png</file>
+        <file>images/delete_label.png</file>
+        <file>images/statistical.png</file>
+        <file>images/threshold.png</file>
+        <file>images/resort_label.png</file>
+        <file>images/upload.png</file>
+        <file>images/cancel.png</file>
+        <file>images/celephone.png</file>
+        <file>images/digital.png</file>
+        <file>images/Dressing.png</file>
+        <file>images/Education.png</file>
+        <file>images/entertainment.png</file>
+        <file>images/house.png</file>
+        <file>images/medicine.png</file>
+        <file>images/neccessity.png</file>
+        <file>images/Pet.png</file>
+        <file>images/transport.png</file>
+        <file>images/expenditure.jpg</file>
+        <file>images/tips.jpg</file>
+        <file>images/revenue.png</file>
+        <file>images/salary.png</file>
+        <file>images/invest.png</file>
+        <file>images/income.png</file>
+        <file>images/outcome.png</file>
+        <file>images/arrow.png</file>
+        <file>images/debt.png</file>
+        <file>images/back1.jpg</file>
+        <file>images/back1.gif</file>
+    </qresource>
+</RCC>
