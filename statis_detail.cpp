@@ -1,28 +1,40 @@
 #include "statis_detail.h"
 
+
+extern "C"{
+#include "stype.h"
+}
+
+
 Statis_Detail::Statis_Detail(QObject *parent):QAbstractTableModel(parent)
 {
-    cost_label_map[1] = tr("Pet");
-    cost_label_map[2] = tr("Food");
-    cost_label_map[3] = tr("Dressing");
-    cost_label_map[4] = tr("General Expenditure");
-    cost_label_map[5] = tr("Transportation");
-    cost_label_map[6] = tr("Daily Necessity");
-    cost_label_map[7] = tr("Digital");
-    cost_label_map[8] = tr("Cellphone");
-    cost_label_map[9] = tr("Housing");
-    cost_label_map[10] = tr("Education");
-    cost_label_map[11] = tr("Medical");
-    cost_label_map[12] = tr("Entertainment");
+    int i = 0;
+    char *fn2 = "/Users/huangli/Documents/Tongji/spring_junior/LinuxProgramming/accounting_proj/ledger.txt";
+
+    parse_entry(fn2, &(this->entry));
+
+    for(i = 0; i < entry.size; ++i) {
+        cost_label_map[i] = tr(entry.labels[i]);
+    }
+
     populateModel();
 }
 
 void Statis_Detail::populateModel()
 {
+    int i = 0;
     header<<tr("Cost Label")<<tr("Percentage")<<tr("Value");
+    /*
     cost_label<< 1 << 2 << 10 <<12;
     percent << tr("10.0%") <<tr("%20.0")<<tr("%35.5") <<tr("%35.5");
     value << tr("13") <<tr("12") <<tr("2000") <<tr("22");
+    */
+
+    for(i = 0; i < entry.size; ++i) {
+        cost_label << i;
+        percent << QString::number(entry.values[i] / entry.total)+tr("%");
+        value << QString::number(entry.values[i]);
+    }
 }
 
 //模型的列数

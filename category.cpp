@@ -1,6 +1,9 @@
 #include "category.h"
 #include <QGroupBox>
 #include <QVBoxLayout>
+#include "mainwindow.h"
+
+
 category::category(QWidget* parent,Qt::WindowFlags f):QToolBox(parent,f)
 {    
     //outcome layer
@@ -130,5 +133,31 @@ category::category(QWidget* parent,Qt::WindowFlags f):QToolBox(parent,f)
 
     this->addItem((QWidget*)groupBox1,tr("Expenditure"));
     this->addItem((QWidget*)groupBox2,tr("Income"));
+
+    connect(this->outBtn_1,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
+    connect(this->outBtn_2,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
+    connect(this->outBtn_3,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
+    connect(this->outBtn_4,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
+    connect(this->outBtn_5,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
+    connect(this->outBtn_6,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
+    connect(this->outBtn_7,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
+    connect(this->outBtn_8,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
+    connect(this->outBtn_9,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
+    connect(this->outBtn_10,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
+    connect(this->outBtn_11,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
+    connect(this->outBtn_12,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
+    connect(this->outBtn_add,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
+    connect(this->inBtn_1,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
+    connect(this->inBtn_2,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
+    connect(this->inBtn_3,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
+    connect(this->inBtn_4,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
+    connect(this->inBtn_add,SIGNAL(clicked(bool)),this,SLOT(add_entry()));
 }
 
+
+void category::add_entry() {
+    MainWindow *p = NULL;
+    QToolButton* obj = qobject_cast<QToolButton*>(sender());
+    p = qobject_cast<MainWindow*>(this->parent());
+    p->qt_add_entry(obj->text());
+}

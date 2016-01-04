@@ -6,6 +6,13 @@
 #include "statis_detail.h"
 #include <QApplication>
 #include <QTableView>
+#include <QPair>
+#include <QVector>
+#include <QLabel>
+#include <QLineEdit>
+#include <QSpacerItem>
+
+
 namespace Ui {
 class MainWindow;
 }
@@ -16,18 +23,24 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
+    void qt_add_entry(QString name);
+    void save2file(char *fn);
     ~MainWindow();
 
 private slots:
-
-
     void on_addAccount_clicked();
 
     void on_today_detail_clicked();
 
+    void commit();
+
 private:
     Ui::MainWindow *ui;
-
+    category *cat;
+    QTableView *view;
+    Statis_Detail *statis;
+    QVector<QPair<QLabel*, QLineEdit*> > entrys;
+    QVector<QLine*> lines;
 
 };
 

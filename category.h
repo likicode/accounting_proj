@@ -8,6 +8,10 @@ class category : public QToolBox
     Q_OBJECT
 public:
     category(QWidget *parent = 0,Qt::WindowFlags f= 0);
+
+private slots:
+    void add_entry();
+
 private:
     QToolButton *outBtn_1;
     QToolButton *outBtn_2;

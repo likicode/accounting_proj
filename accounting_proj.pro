@@ -15,11 +15,17 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     category.cpp \
-    statis_detail.cpp
+    statis_detail.cpp \
+    file_client.c \
+    utils.c \
+    stype.c
 
 HEADERS  += mainwindow.h \
     category.h \
-    statis_detail.h
+    statis_detail.h \
+    file_client.h \
+    utils.h \
+    stype.h
 
 FORMS    += mainwindow.ui
 

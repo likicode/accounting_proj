@@ -5,6 +5,11 @@
 #include <QMap>
 #include <QStringList>
 
+extern "C"{
+#include "stype.h"
+}
+
+
 class Statis_Detail:public QAbstractTableModel
 {
 public:
@@ -16,11 +21,12 @@ public:
 //signals:
 //public slots:
 private:
-    QVector<short> cost_label ;
+    QVector<short> cost_label;
     QMap<short,QString> cost_label_map;
     QStringList percent;
     QStringList value;
     QStringList header;
+    ledger_entry entry;
     void populateModel();
 };
 
