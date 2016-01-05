@@ -27,9 +27,10 @@ int connect_server(char* ip, int port) {
 
 int fupdate(char* ip, int port, char *sent_fn) {
     int socket_desc;
+    char msg[BUFFER_SIZE];
 
     if ((socket_desc = connect_server(ip, port)) == -1) {
-        puts("connection error");
+        puts("connect error");
         return -1;
     }
 
@@ -39,6 +40,7 @@ int fupdate(char* ip, int port, char *sent_fn) {
     }
 
     send_file(sent_fn, socket_desc);
+    recv(socket_desc, msg, BUFFER_SIZE, 0);
 
     close(socket_desc);
 
@@ -50,7 +52,7 @@ int fsynchronize(char* ip, int port, char *recv_fn) {
     int socket_desc;
 
     if ((socket_desc = connect_server(ip, port)) == -1) {
-        puts("connection error");
+        puts("connect error");
         return -1;
     }
 
@@ -58,6 +60,7 @@ int fsynchronize(char* ip, int port, char *recv_fn) {
         perror("sync error.\n");
         return -1;
     }
+    shutdown(socket_desc, SHUT_WR);
 
     recv_file(recv_fn, socket_desc);
     close(socket_desc);

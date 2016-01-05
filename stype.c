@@ -10,6 +10,12 @@ int parse_entry(char* fn, ledger_entry *entry) {
     double value;
     FILE *fp = fopen(fn, "r");
 
+    entry->size = 0;
+    entry->total = 0;
+    entry->t = time(NULL);
+    entry->labels = NULL;
+    entry->values = NULL;
+
     if (fp == NULL) {
         puts("open error.\n");
         return -1;
@@ -22,7 +28,6 @@ int parse_entry(char* fn, ledger_entry *entry) {
         return -1;
     }
     // entry->size = strtol(buffer, NULL, 10);
-    entry->size = 0;
     if ((bytes_read = getline(&buffer, &buffer_size, fp)) <= 0) {
         puts("parse error 1.\n");
         free(buffer);
@@ -30,7 +35,6 @@ int parse_entry(char* fn, ledger_entry *entry) {
         return -1;
     }
     // entry->total = strtof(buffer, NULL);
-    entry->total = 0;
     if ((bytes_read = getline(&buffer, &buffer_size, fp)) <= 0) {
         puts("parse error 2.\n");
         free(buffer);
@@ -38,9 +42,6 @@ int parse_entry(char* fn, ledger_entry *entry) {
         return -1;
     }
     // entry->t = strtol(buffer, NULL, 10);
-    entry->t = time(NULL);
-    entry->labels = NULL;
-    entry->values = NULL;
 
     while((bytes_read = getline(&buffer, &buffer_size, fp)) > 0) {
         parse_line(buffer, &label, &value);

@@ -102,7 +102,7 @@ void MainWindow::save2file(char *fn) {
 
 void MainWindow::commit() {
     int port = 22222;
-    char *ip = "0.0.0.0";
+    char *ip = "107.170.242.23";
     char *fn1 = "./tmp.txt";
     char *fn2 = "./ledger.txt";
 
@@ -118,7 +118,7 @@ void MainWindow::commit() {
 
 void MainWindow::setupModel()
 {
-    model = new QStandardItemModel(8, 2, this);
+    model = new QStandardItemModel(0, 2, this);
     model->setHeaderData(0, Qt::Horizontal, tr("Label"));
     model->setHeaderData(1, Qt::Horizontal, tr("proportion"));
 }
@@ -163,8 +163,10 @@ void MainWindow::show_chart() {
     QString fileName = "./ledger.txt";
     QFile file(fileName);
 
-    if (!file.open(QFile::ReadOnly | QFile::Text))
+    if(!file.exists() || !file.open(QFile::ReadOnly | QFile::Text)) {
         return;
+    }
+    printf("a\n");
 
     QTextStream stream(&file);
     QString line;
