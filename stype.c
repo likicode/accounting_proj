@@ -140,6 +140,10 @@ int save_entry(char* fn, ledger_entry *entry) {
     int i = 0, size = entry->size;
     FILE *fp = fopen(fn, "w");
 
+    if(fp == NULL) {
+        return -1;
+    }
+
     fprintf(fp, "%d\n", entry->size);
     fprintf(fp, "%f\n", entry->total);
     fprintf(fp, "%ld\n", entry->t);

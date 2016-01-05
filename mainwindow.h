@@ -25,6 +25,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     void qt_add_entry(QString name);
     void save2file(char *fn);
+    void show_chart();
     ~MainWindow();
 
 private slots:
@@ -41,6 +42,13 @@ private:
     Statis_Detail *statis;
     QVector<QPair<QLabel*, QLineEdit*> > entrys;
     QVector<QLine*> lines;
+
+    void setupModel();
+    void setupViews();
+
+    QAbstractItemModel *model;
+    QAbstractItemView *pieChart;
+    QItemSelectionModel *selectionModel;
 
 };
 

@@ -18,14 +18,16 @@ SOURCES += main.cpp\
     statis_detail.cpp \
     file_client.c \
     utils.c \
-    stype.c
+    stype.c \
+    pieview.cpp
 
 HEADERS  += mainwindow.h \
     category.h \
     statis_detail.h \
     file_client.h \
     utils.h \
-    stype.h
+    stype.h \
+    pieview.h
 
 FORMS    += mainwindow.ui
 

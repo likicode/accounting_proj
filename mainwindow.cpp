@@ -8,6 +8,9 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QTableView>
+#include <QFile>
+#include <QtWidgets>
+#include "pieview.h"
 
 
 extern "C" {
@@ -40,7 +43,10 @@ MainWindow::MainWindow(QWidget *parent) :
     palette.setBrush(QPalette::Background, bkgnd);
     this->setPalette(palette);*/
 
+    setupModel();
+    setupViews();
 
+    show_chart();
 }
 
 MainWindow::~MainWindow()
@@ -72,7 +78,6 @@ void MainWindow::qt_add_entry(QString name) {
 
 void MainWindow::save2file(char *fn) {
     int i = 0, num_row = ui->formLayout->rowCount();
-    char *fn1 = "/Users/huangli/Documents/Tongji/spring_junior/LinuxProgramming/accounting_proj/tmp.txt";
     QLabel *label = NULL;
     QLineEdit *widget = NULL;
     ledger_entry entry;
@@ -89,7 +94,7 @@ void MainWindow::save2file(char *fn) {
         add_entry(&entry, label->text().toLatin1().data(), widget->text().toDouble());
     }
 
-    save_entry(fn1, &entry);
+    save_entry(fn, &entry);
 
     return;
 }
@@ -105,6 +110,88 @@ void MainWindow::commit() {
 
     fupdate(ip, port, fn1);
     fsynchronize(ip, port, fn2);
+    show_chart();
+
+    return;
+}
+
+
+void MainWindow::setupModel()
+{
+    model = new QStandardItemModel(8, 2, this);
+    model->setHeaderData(0, Qt::Horizontal, tr("Label"));
+    model->setHeaderData(1, Qt::Horizontal, tr("proportion"));
+}
+
+void MainWindow::setupViews()
+{
+    QSplitter *splitter = new QSplitter(this);
+    QTableView *table = new QTableView(this);
+    pieChart = new PieView(ui->frame);
+    splitter->addWidget(table);
+    splitter->addWidget(pieChart);
+    splitter->setStretchFactor(0, 0);
+    splitter->setStretchFactor(1, 1);
+
+    table->setModel(model);
+    pieChart->setModel(model);
+
+    QItemSelectionModel *selectionModel = new QItemSelectionModel(model);
+    table->setSelectionModel(selectionModel);
+    pieChart->setSelectionModel(selectionModel);
+
+    QHeaderView *headerView = table->horizontalHeader();
+    headerView->setStretchLastSection(true);
+
+    // setCentralWidget(splitter);
+
+    QVBoxLayout *nl = new QVBoxLayout;
+    splitter->setStretchFactor(0,1);
+    splitter->setStretchFactor(1,2);
+    nl->addWidget(splitter);
+    ui->frame->setLayout(nl);
+}
+
+
+int random_int() {
+    int output = 0 + (rand() % 16777216);
+    return output;
+}
+
+
+void MainWindow::show_chart() {
+    QString fileName = "/Users/huangli/Documents/Tongji/spring_junior/LinuxProgramming/accounting_proj/ledger.txt";
+    QFile file(fileName);
+
+    if (!file.open(QFile::ReadOnly | QFile::Text))
+        return;
+
+    QTextStream stream(&file);
+    QString line;
+
+    model->removeRows(0, model->rowCount(QModelIndex()), QModelIndex());
+
+    int row = 0;
+    line = stream.readLine();
+    line = stream.readLine();
+    line = stream.readLine();
+    do {
+        line = stream.readLine();
+        if (!line.isEmpty()) {
+            model->insertRows(row, 1, QModelIndex());
+
+            QStringList pieces = line.split(",", QString::SkipEmptyParts);
+            model->setData(model->index(row, 0, QModelIndex()),
+                           pieces.value(0));
+            model->setData(model->index(row, 1, QModelIndex()),
+                           pieces.value(1));
+            model->setData(model->index(row, 0, QModelIndex()),
+                           QColor(random_int()), Qt::DecorationRole);
+            row++;
+        }
+    } while (!line.isEmpty());
+
+    file.close();
 
     return;
 }

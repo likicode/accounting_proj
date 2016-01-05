@@ -29,7 +29,7 @@ int fupdate(char* ip, int port, char *sent_fn) {
     int socket_desc;
 
     if ((socket_desc = connect_server(ip, port)) == -1) {
-        puts("connect error");
+        puts("connection error");
         return -1;
     }
 
@@ -50,7 +50,7 @@ int fsynchronize(char* ip, int port, char *recv_fn) {
     int socket_desc;
 
     if ((socket_desc = connect_server(ip, port)) == -1) {
-        puts("connect error");
+        puts("connection error");
         return -1;
     }
 
