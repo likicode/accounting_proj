@@ -9,7 +9,7 @@ extern "C"{
 Statis_Detail::Statis_Detail(QObject *parent):QAbstractTableModel(parent)
 {
     int i = 0;
-    char *fn2 = "/Users/huangli/Documents/Tongji/spring_junior/LinuxProgramming/accounting_proj/ledger.txt";
+    char *fn2 = "./ledger.txt";
 
     parse_entry(fn2, &(this->entry));
 
@@ -32,8 +32,8 @@ void Statis_Detail::populateModel()
 
     for(i = 0; i < entry.size; ++i) {
         cost_label << i;
-        percent << QString::number(entry.values[i] / entry.total)+tr("%");
         value << QString::number(entry.values[i]);
+        percent << QString::number(entry.values[i] / entry.total)+tr("%");
     }
 }
 
@@ -58,10 +58,10 @@ QVariant Statis_Detail::data(const QModelIndex &index, int role) const
                 return cost_label_map[cost_label[index.row()]];
                 break;
             case 1:
-                return percent[index.row()];
+                return value[index.row()];
                 break;
             case 2:
-                return value[index.row()];
+                return percent[index.row()];
                 break;
             default:
                 return QVariant();

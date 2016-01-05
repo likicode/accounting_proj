@@ -103,8 +103,8 @@ void MainWindow::save2file(char *fn) {
 void MainWindow::commit() {
     int port = 22222;
     char *ip = "0.0.0.0";
-    char *fn1 = "/Users/huangli/Documents/Tongji/spring_junior/LinuxProgramming/accounting_proj/tmp.txt";
-    char *fn2 = "/Users/huangli/Documents/Tongji/spring_junior/LinuxProgramming/accounting_proj/ledger.txt";
+    char *fn1 = "./tmp.txt";
+    char *fn2 = "./ledger.txt";
 
     save2file(fn1);
 
@@ -160,7 +160,7 @@ int random_int() {
 
 
 void MainWindow::show_chart() {
-    QString fileName = "/Users/huangli/Documents/Tongji/spring_junior/LinuxProgramming/accounting_proj/ledger.txt";
+    QString fileName = "./ledger.txt";
     QFile file(fileName);
 
     if (!file.open(QFile::ReadOnly | QFile::Text))
@@ -172,8 +172,9 @@ void MainWindow::show_chart() {
     model->removeRows(0, model->rowCount(QModelIndex()), QModelIndex());
 
     int row = 0;
+    double total = 0;
     line = stream.readLine();
-    line = stream.readLine();
+    total = stream.readLine().toDouble();
     line = stream.readLine();
     do {
         line = stream.readLine();
@@ -184,7 +185,7 @@ void MainWindow::show_chart() {
             model->setData(model->index(row, 0, QModelIndex()),
                            pieces.value(0));
             model->setData(model->index(row, 1, QModelIndex()),
-                           pieces.value(1));
+                           QString::number(pieces.value(1).toDouble()/total));
             model->setData(model->index(row, 0, QModelIndex()),
                            QColor(random_int()), Qt::DecorationRole);
             row++;

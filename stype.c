@@ -29,14 +29,16 @@ int parse_entry(char* fn, ledger_entry *entry) {
         fclose(fp);
         return -1;
     }
-    entry->total = strtof(buffer, NULL);
+    // entry->total = strtof(buffer, NULL);
+    entry->total = 0;
     if ((bytes_read = getline(&buffer, &buffer_size, fp)) <= 0) {
         puts("parse error 2.\n");
         free(buffer);
         fclose(fp);
         return -1;
     }
-    entry->t = strtol(buffer, NULL, 10);
+    // entry->t = strtol(buffer, NULL, 10);
+    entry->t = time(NULL);
     entry->labels = NULL;
     entry->values = NULL;
 
@@ -61,9 +63,7 @@ int parse_line(char *line, char **label, double *value) {
 
 int merge_entry(ledger_entry *left, ledger_entry *right) {
     int i = 0, size = right->size;
-    left->total += right->total;
-    // TODO
-    left->t = left->t;
+    left->t = time(NULL);
 
     for (i = 0; i < size; ++i) {
         add_entry(left, right->labels[i], right->values[i]);
@@ -93,6 +93,7 @@ int add_entry(ledger_entry *le, char *label, double value) {
     } else {
         le->values[idx] += value;
     }
+    le->total += value;
 
     return 0;
 }
@@ -139,10 +140,6 @@ int check_date(char *fn, char *backup) {
 int save_entry(char* fn, ledger_entry *entry) {
     int i = 0, size = entry->size;
     FILE *fp = fopen(fn, "w");
-
-    if(fp == NULL) {
-        return -1;
-    }
 
     fprintf(fp, "%d\n", entry->size);
     fprintf(fp, "%f\n", entry->total);
