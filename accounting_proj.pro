@@ -33,3 +33,7 @@ FORMS    += mainwindow.ui
 
 RESOURCES += \
     images.qrc
+
+DISTFILES += \
+    qss2.qss \
+    qss3.qss

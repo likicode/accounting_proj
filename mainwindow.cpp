@@ -12,7 +12,6 @@
 #include <QtWidgets>
 #include <QGridLayout>
 #include "pieview.h"
-
 extern "C" {
 #include "file_client.h"
 }
@@ -22,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    setCss1();
     ui->setupUi(this);
     statis = new Statis_Detail();
     view = new QTableView();
@@ -40,12 +40,17 @@ MainWindow::MainWindow(QWidget *parent) :
     QPalette palette;
     palette.setBrush(QPalette::Background, bkgnd);
     this->setPalette(palette);*/
-
     QDate date = QDate::currentDate();
     ui->dateEdit->setDate(date);
 
     setupModel();
     setupViews();
+    //export
+    connect(ui->pushButton, SIGNAL(clicked(bool)), this, SLOT(on_actionSave_as_triggered()));
+
+    //Theme
+    connect(ui->actionDark, SIGNAL(triggered()), this, SLOT(setCss1()));
+    connect(ui->actionLight, SIGNAL(triggered()), this, SLOT(setCss2()));
 
     connect(ui->commit, SIGNAL(clicked(bool)), this, SLOT(commit()));
     connect(ui->comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(show_in_out()));
@@ -154,8 +159,6 @@ void MainWindow::setupViews()
     QHeaderView *headerView = table->horizontalHeader();
     headerView->setStretchLastSection(true);
 
-    // setCentralWidget(splitter);
-
     QVBoxLayout *nl = new QVBoxLayout;
     splitter->setStretchFactor(0,1);
     splitter->setStretchFactor(1,2);
@@ -188,8 +191,8 @@ void MainWindow::setupTableView()
     model->setHeaderData(1,Qt::Horizontal,"Value");
     ui->tableView->setModel(model);
     ui->tableView->setColumnWidth(0,80);
-    ui->tableView->setColumnWidth(1,52);
-    ui->tableView->setColumnWidth(2,60);
+    ui->tableView->setColumnWidth(1,80);
+    ui->tableView->setColumnWidth(2,80);
     ui->tableView->horizontalHeader()->setStyleSheet("");
 }
 
@@ -246,4 +249,72 @@ void MainWindow::show_chart() {
     ui->outValue->setText(QString::number((out_value)));
 
     return;
+}
+
+QString MainWindow::initText()
+{
+    QString text;
+    statis = new Statis_Detail();
+    QStandardItemModel *model = new QStandardItemModel();
+    ledger_entry entry;
+    QMap<short,QString> cost_label_map;
+    cost_label_map = statis->getMap();
+    entry  = statis->getEntry();
+    for(int i = 0; i < entry.size; ++i) {
+        QString labelName = cost_label_map[i];
+        QStandardItem *Label = new QStandardItem(labelName);
+        QStandardItem *Value = new QStandardItem(QString::number(entry.values[i]));
+        QStandardItem *Percent = new QStandardItem(QString::number(100*entry.values[i] / entry.total,'f',2)+tr("%"));
+        text += labelName + "," + QString::number(entry.values[i]) + "," + QString::number(100*entry.values[i] / entry.total,'f',2) + "\n";
+    }
+    return text;
+}
+
+void MainWindow::on_actionSave_as_triggered()
+{
+    QString fn = QFileDialog::getSaveFileName(this, tr("Save as..."),
+                                              QString(), tr("CSV files (*.csv);;ODS files (*.ods);;ODF files (*.odt);;HTML-Files (*.htm *.html);;All Files (*)"));
+    if (fn.isEmpty())
+        return;
+        QFile index(fn);
+        if (!index.open(QIODevice::WriteOnly|QIODevice::Text)) {
+            QMessageBox::critical(NULL, "提示", "无法创建文件");
+        } else {
+            QTextStream liu(&index);
+            liu.setCodec("UTF-8");
+            liu<<initText();
+        }
+    return;
+}
+
+void MainWindow::setCss1() {
+    QString qss;
+
+    QFile qssFile(":/images/qss3.qss");
+    qssFile.open(QFile::ReadOnly);
+    if(qssFile.isOpen())
+    {
+      qss = QLatin1String(qssFile.readAll());
+      qApp->setStyleSheet(qss);
+      qssFile.close();
+    }
+    else {
+//        cout<<"error!!!!!!"<<endl;
+    }
+}
+
+void MainWindow::setCss2() {
+    QString qss;
+
+    QFile qssFile(":/images/qss2.qss");
+    qssFile.open(QFile::ReadOnly);
+    if(qssFile.isOpen())
+    {
+      qss = QLatin1String(qssFile.readAll());
+      qApp->setStyleSheet(qss);
+      qssFile.close();
+    }
+    else {
+//        cout<<"error!!!!!!"<<endl;
+    }
 }

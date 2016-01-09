@@ -29,5 +29,8 @@
         <file>images/debt.png</file>
         <file>images/back1.jpg</file>
         <file>images/back1.gif</file>
+        <file>images/hover.png</file>
+        <file>images/qss2.qss</file>
+        <file>images/qss3.qss</file>
     </qresource>
 </RCC>

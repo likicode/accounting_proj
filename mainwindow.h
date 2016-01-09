@@ -38,6 +38,12 @@ private slots:
 
     void show_in_out();
 
+    void on_actionSave_as_triggered();
+    QString initText();
+    void setCss1();
+    void setCss2();
+
+
 private:
     Ui::MainWindow *ui;
     category *cat;
