@@ -7,6 +7,7 @@
 category::category(QWidget* parent,Qt::WindowFlags f):QToolBox(parent,f)
 {    
     //outcome layer
+    this->move(600,250);
     setWindowTitle(tr("Add Accout"));
     outBtn_1 = new QToolButton;
     outBtn_1->setText(tr("General Expenditure"));
