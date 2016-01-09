@@ -180,7 +180,7 @@ void MainWindow::show_chart() {
     int i = 0, row = 0;
     double in_value = 0;
     double out_value = 0;
-    bool idx = ui->comboBox->currentIndex();
+    int idx = ui->comboBox->currentIndex();
     for (i = 0; i < entry.size; ++i) {
         if (idx == 0 && entry.values[i] >= 0) {
             model->insertRows(row, 1, QModelIndex());
@@ -202,7 +202,6 @@ void MainWindow::show_chart() {
                            QColor(random_int(i, entry.size)), Qt::DecorationRole);
             out_value -= entry.values[i];
             ++row;
-            printf("%s, %f\n", entry.labels[i], entry.values[i]);
         }
     }
 
