@@ -54,7 +54,7 @@ PieView::PieView(QWidget *parent)
     verticalScrollBar()->setRange(0, 0);
 
     margin = 2;
-    totalSize = parent->width()/2;
+    totalSize = parent->width();
     pieSize = totalSize - 2 * margin;
     validItems = 0;
     totalValue = 0.0;
