@@ -11,7 +11,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QSpacerItem>
-
+#include <QGridLayout>
 
 namespace Ui {
 class MainWindow;
@@ -49,6 +49,7 @@ private:
     QAbstractItemModel *model;
     QAbstractItemView *pieChart;
     QItemSelectionModel *selectionModel;
+    QGridLayout *mainLayout;
 
 };
 

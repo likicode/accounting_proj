@@ -10,8 +10,8 @@
 #include <QTableView>
 #include <QFile>
 #include <QtWidgets>
+#include <QGridLayout>
 #include "pieview.h"
-
 
 extern "C" {
 #include "file_client.h"
@@ -29,7 +29,9 @@ MainWindow::MainWindow(QWidget *parent) :
     view->setWindowTitle(QObject::tr("Details"));
     view->resize(400,400);
 
-    ui->formLayout->setLabelAlignment(Qt::AlignLeft);
+
+    setLayout(mainLayout);
+
 
     connect(ui->commit, SIGNAL(clicked(bool)), this, SLOT(commit()));
 
