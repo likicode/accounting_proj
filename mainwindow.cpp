@@ -29,12 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     view->setWindowTitle(QObject::tr("Details"));
     view->resize(400,400);
 
-
     setLayout(mainLayout);
-
-
-    connect(ui->commit, SIGNAL(clicked(bool)), this, SLOT(commit()));
-    connect(ui->comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(show_in_out()));
 
     pthread_mutex_init(&send_lock, NULL);
     pthread_mutex_init(&recv_lock, NULL);
@@ -46,8 +41,16 @@ MainWindow::MainWindow(QWidget *parent) :
     palette.setBrush(QPalette::Background, bkgnd);
     this->setPalette(palette);*/
 
+    QDate date = QDate::currentDate();
+    ui->dateEdit->setDate(date);
+
     setupModel();
     setupViews();
+
+    connect(ui->commit, SIGNAL(clicked(bool)), this, SLOT(commit()));
+    connect(ui->comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(show_in_out()));
+    connect(ui->dateEdit, SIGNAL(dateChanged(QDate)), this, SLOT(show_in_out()));
+    connect(ui->comboBox_3, SIGNAL(currentIndexChanged(int)), this, SLOT(show_in_out()));
 
     show_chart();
 }
@@ -107,7 +110,11 @@ void MainWindow::commit() {
     int port = 22222;
     char *ip = "107.170.242.23";
     char *fn1 = "./tmp.txt";
-    char *fn2 = "./ledger.txt";
+    char *fn2 = "./datum/ledger.txt";
+
+    if (!QDir("./datum").exists()) {
+        QDir().mkdir("./datum");
+    }
 
     save2file(fn1);
 
@@ -123,7 +130,7 @@ void MainWindow::setupModel()
 {
     model = new QStandardItemModel(0, 2, this);
     model->setHeaderData(0, Qt::Horizontal, tr("Label"));
-    model->setHeaderData(1, Qt::Horizontal, tr("proportion"));
+    model->setHeaderData(1, Qt::Horizontal, tr("amount"));
 }
 
 void MainWindow::setupViews()
@@ -171,11 +178,10 @@ void MainWindow::show_in_out() {
 
 
 void MainWindow::show_chart() {
-    char* fileName = "./ledger.txt";
     ledger_entry entry;
-    if (parse_entry(fileName, &entry) == -1 ) {
-        return;
-    }
+
+    prepare_entry(ui->comboBox_3->currentIndex(), &entry, ui->dateEdit->date().dayOfYear());
+    printf("======%d\n", ui->comboBox_3->currentIndex());
 
     model->removeRows(0, model->rowCount(QModelIndex()), QModelIndex());
 
@@ -189,7 +195,7 @@ void MainWindow::show_chart() {
             model->setData(model->index(row, 0, QModelIndex()),
                            QVariant(entry.labels[i]));
             model->setData(model->index(row, 1, QModelIndex()),
-                           QString::number(entry.values[i]/entry.total));
+                           QString::number(entry.values[i]));
             model->setData(model->index(row, 0, QModelIndex()),
                            QColor(random_int(i, entry.size)), Qt::DecorationRole);
             in_value += entry.values[i];
@@ -199,7 +205,7 @@ void MainWindow::show_chart() {
             model->setData(model->index(row, 0, QModelIndex()),
                            QVariant(entry.labels[i]));
             model->setData(model->index(row, 1, QModelIndex()),
-                           QString::number(-entry.values[i]/entry.total));
+                           QString::number(-entry.values[i]));
             model->setData(model->index(row, 0, QModelIndex()),
                            QColor(random_int(i, entry.size)), Qt::DecorationRole);
             out_value -= entry.values[i];
@@ -209,13 +215,6 @@ void MainWindow::show_chart() {
 
     ui->inValue->setText(QString::number(in_value));
     ui->outValue->setText(QString::number((out_value)));
-
-    return;
-}
-
-
-void MainWindow::update_statistics() {
-    ;
 
     return;
 }

@@ -10,6 +10,8 @@ int recv_file(char* fn, int socket_desc) {
 
     if (fp == NULL) {
         puts("recv open failed.\n");
+        pthread_mutex_unlock(&recv_lock);
+        return -1;
     }
 
     while ((bytes_read = recv(socket_desc, recved, sizeof(recved), 0)) > 0) {
@@ -42,6 +44,8 @@ int send_file(char* fn, int socket_desc) {
 
     if (fp == NULL) {
         puts("send open failed.\n");
+        pthread_mutex_unlock(&send_lock);
+        return -1;
     }
 
     while ((bytes_read = fread(sent, sizeof(char), BUFFER_SIZE, fp)) > 0) {

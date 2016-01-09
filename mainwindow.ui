@@ -52,7 +52,7 @@
              </font>
             </property>
             <property name="text">
-             <string>10000</string>
+             <string>0</string>
             </property>
            </widget>
           </item>
@@ -75,7 +75,7 @@
              </font>
             </property>
             <property name="text">
-             <string>800</string>
+             <string>0</string>
             </property>
            </widget>
           </item>
@@ -184,17 +184,17 @@
              <widget class="QComboBox" name="comboBox_3">
               <item>
                <property name="text">
+                <string>date</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
                 <string>This Week</string>
                </property>
               </item>
               <item>
                <property name="text">
                 <string>This Month</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>This Season</string>
                </property>
               </item>
               <item>
@@ -277,11 +277,7 @@
      </layout>
     </item>
    </layout>
-   <zorder>horizontalLayoutWidget_3</zorder>
    <zorder></zorder>
-   <zorder>today_detail</zorder>
-   <zorder>comboBox</zorder>
-   <zorder>horizontalLayoutWidget_4</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

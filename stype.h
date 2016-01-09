@@ -2,7 +2,13 @@
 #define SHIEH_TYPE
 
 
+#include <math.h>
 #include <time.h>
+#include <errno.h>
+#include <string.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 
 typedef struct {
@@ -27,6 +33,8 @@ int index_of_e(ledger_entry *le, char *label);
 int check_date(char *fn, char *backup);
 
 int save_entry(char* fn, ledger_entry *entry);
+
+void prepare_entry(int flag, ledger_entry *entry, int dayofyear);
 
 
 #endif /* ifndef SHIEH_TYPE */

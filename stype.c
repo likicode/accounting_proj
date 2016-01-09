@@ -10,24 +10,19 @@ int parse_entry(char* fn, ledger_entry *entry) {
     double value;
     FILE *fp = fopen(fn, "r");
 
-    entry->size = 0;
-    entry->total = 0;
-    entry->t = time(NULL);
-    entry->labels = NULL;
-    entry->values = NULL;
-
     if (fp == NULL) {
-        puts("open error.\n");
+        printf("open error: %s\n", fn);
         return -1;
     }
 
     if ((bytes_read = getline(&buffer, &buffer_size, fp)) <= 0) {
-        puts("parse error 0.\n");
+        printf("parse error 0: %s\n", fn);
         free(buffer);
         fclose(fp);
         return -1;
     }
     // entry->size = strtol(buffer, NULL, 10);
+    entry->size = 0;
     if ((bytes_read = getline(&buffer, &buffer_size, fp)) <= 0) {
         puts("parse error 1.\n");
         free(buffer);
@@ -35,13 +30,17 @@ int parse_entry(char* fn, ledger_entry *entry) {
         return -1;
     }
     // entry->total = strtof(buffer, NULL);
+    entry->total = 0;
     if ((bytes_read = getline(&buffer, &buffer_size, fp)) <= 0) {
         puts("parse error 2.\n");
         free(buffer);
         fclose(fp);
         return -1;
     }
-    // entry->t = strtol(buffer, NULL, 10);
+    entry->t = strtol(buffer, NULL, 10);
+    // entry->t = time(NULL);
+    entry->labels = NULL;
+    entry->values = NULL;
 
     while((bytes_read = getline(&buffer, &buffer_size, fp)) > 0) {
         parse_line(buffer, &label, &value);
@@ -156,3 +155,69 @@ int save_entry(char* fn, ledger_entry *entry) {
 }
 
 
+void prepare_entry(int flag, ledger_entry *entry, int dayofyear) {
+    int diff1 = 0, diff2 = 0, diff3 = 0;
+    time_t tt = time(NULL);
+    struct tm* ttm= gmtime(&tt), *ettm = NULL;
+    char *datum_folder = "./datum/", buffer[BUFFER_SIZE];
+    DIR *dirp = NULL;
+    struct dirent *dp = NULL;
+    ledger_entry tmpe;
+    entry->t = 0;
+    entry->size = 0;
+    entry->total = 0;
+    entry->labels = NULL;
+    entry->values = NULL;
+
+    if ((dirp = opendir(datum_folder)) == NULL) {
+        printf("open dir error\n");
+        return;
+    }
+
+    do {
+        errno = 0;
+        if ((dp = readdir(dirp)) != NULL) {
+            if (dp->d_name[0] == '.') {
+                continue;
+            }
+            strcpy(buffer, datum_folder);
+            if ((parse_entry(strcat(buffer, dp->d_name), &tmpe) == -1)) {
+                continue;
+            }
+            ettm = gmtime(&tmpe.t);
+
+            switch (flag) {
+                case 0:
+                    if (ettm->tm_year == ttm->tm_year &&
+                            ettm->tm_yday == dayofyear - 1) {
+                        merge_entry(entry, &tmpe);
+                    }
+                    break;
+                case 1:
+                    diff1 = ettm->tm_wday - 0;
+                    diff2 = 6 - ettm->tm_wday;
+                    diff3 = abs(ettm->tm_year - ttm->tm_year);
+                    if (diff3 < 7 && (diff3 < diff1 || diff3 < diff2)) {
+                        merge_entry(entry, &tmpe);
+                    }
+                    break;
+                case 2:
+                    if (ettm->tm_year == ttm->tm_year &&
+                            ettm->tm_mon == ttm->tm_mon) {
+                        merge_entry(entry, &tmpe);
+                    }
+                    break;
+                case 3:
+                    if (ettm->tm_year == ttm->tm_year) {
+                        merge_entry(entry, &tmpe);
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+        }
+    } while(dp != NULL);
+
+    return;
+}

@@ -9,7 +9,7 @@ extern "C"{
 Statis_Detail::Statis_Detail(QObject *parent):QAbstractTableModel(parent)
 {
     int i = 0;
-    char *fn2 = "./ledger.txt";
+    char *fn2 = "./datum/ledger.txt";
 
     parse_entry(fn2, &(this->entry));
 
