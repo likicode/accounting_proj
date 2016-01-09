@@ -122,7 +122,7 @@ void MainWindow::commit() {
     fupdate(ip, port, fn1);
     fsynchronize(ip, port, fn2);
     show_chart();
-
+    setupTableView();
     return;
 }
 
@@ -189,7 +189,7 @@ void MainWindow::setupTableView()
     ui->tableView->setModel(model);
     ui->tableView->setColumnWidth(0,80);
     ui->tableView->setColumnWidth(1,60);
-    ui->tableView->setColumnWidth(2,60);
+    ui->tableView->setColumnWidth(2,52);
     ui->tableView->horizontalHeader()->setStyleSheet("");
 }
 
