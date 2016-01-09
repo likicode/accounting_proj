@@ -70,7 +70,8 @@ void MainWindow::on_addAccount_clicked()
 
 void MainWindow::on_today_detail_clicked()
 {
-    view->show();
+    //view->show();
+    setupTableView();
 }
 
 
@@ -162,6 +163,35 @@ void MainWindow::setupViews()
     ui->frame->setLayout(nl);
 }
 
+void MainWindow::setupTableView()
+{
+    statis = new Statis_Detail();
+    QStandardItemModel *model = new QStandardItemModel();
+    ledger_entry entry;
+    QMap<short,QString> cost_label_map;
+    cost_label_map = statis->getMap();
+    entry  = statis->getEntry();
+    for(int i = 0; i < entry.size; ++i) {
+        QString labelName = cost_label_map[i];
+        QStandardItem *Label = new QStandardItem(labelName);
+        QStandardItem *Value = new QStandardItem(QString::number(entry.values[i]));
+        QStandardItem *Percent = new QStandardItem(QString::number(100*entry.values[i] / entry.total,'f',2)+tr("%"));
+        model->setItem(i,0,Label);
+        model->setItem(i,1,Value);
+        model->setItem(i,2,Percent);
+    }
+
+    model->setColumnCount(3);
+    model->setRowCount(statis->rowCount());
+    model->setHeaderData(0,Qt::Horizontal,"Cost Label");
+    model->setHeaderData(2,Qt::Horizontal,"Percent");
+    model->setHeaderData(1,Qt::Horizontal,"Value");
+    ui->tableView->setModel(model);
+    ui->tableView->setColumnWidth(0,80);
+    ui->tableView->setColumnWidth(1,60);
+    ui->tableView->setColumnWidth(2,60);
+    ui->tableView->horizontalHeader()->setStyleSheet("");
+}
 
 int random_int(int row, int size) {
     int mid = (row+1.0)/(2*size)*RAND_MAX;

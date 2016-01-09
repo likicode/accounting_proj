@@ -20,6 +20,16 @@ Statis_Detail::Statis_Detail(QObject *parent):QAbstractTableModel(parent)
     populateModel();
 }
 
+ledger_entry Statis_Detail::getEntry()
+{
+    return entry;
+}
+
+QMap<short,QString> Statis_Detail::getMap()
+{
+    return cost_label_map;
+}
+
 void Statis_Detail::populateModel()
 {
     int i = 0;
