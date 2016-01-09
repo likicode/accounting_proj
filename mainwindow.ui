@@ -68,22 +68,12 @@
     </property>
     <item>
      <property name="text">
-      <string>Diagram Form</string>
+      <string>income</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Pie Chart</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Histogram</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Line Chart</string>
+      <string>outcome</string>
      </property>
     </item>
    </widget>
@@ -257,7 +247,7 @@
      <rect>
       <x>0</x>
       <y>10</y>
-      <width>311</width>
+      <width>321</width>
       <height>80</height>
      </rect>
     </property>
