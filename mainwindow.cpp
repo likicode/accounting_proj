@@ -188,8 +188,8 @@ void MainWindow::setupTableView()
     model->setHeaderData(1,Qt::Horizontal,"Value");
     ui->tableView->setModel(model);
     ui->tableView->setColumnWidth(0,80);
-    ui->tableView->setColumnWidth(1,60);
-    ui->tableView->setColumnWidth(2,52);
+    ui->tableView->setColumnWidth(1,52);
+    ui->tableView->setColumnWidth(2,60);
     ui->tableView->horizontalHeader()->setStyleSheet("");
 }
 
