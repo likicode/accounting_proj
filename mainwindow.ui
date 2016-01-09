@@ -142,7 +142,7 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0">
+         <layout class="QVBoxLayout" name="verticalLayout" stretch="1,8,2,7,1,1">
           <item>
            <widget class="QComboBox" name="comboBox">
             <item>
