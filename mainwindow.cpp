@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     connect(ui->commit, SIGNAL(clicked(bool)), this, SLOT(commit()));
+    connect(ui->comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(show_in_out()));
 
     pthread_mutex_init(&send_lock, NULL);
     pthread_mutex_init(&recv_lock, NULL);
@@ -155,48 +156,66 @@ void MainWindow::setupViews()
 }
 
 
-int random_int() {
-    int output = 0 + (rand() % 16777216);
+int random_int(int row, int size) {
+    int mid = (row+1.0)/(2*size)*RAND_MAX;
+    int output = rand() % 16777216;
     return output;
 }
 
 
-void MainWindow::show_chart() {
-    QString fileName = "./ledger.txt";
-    QFile file(fileName);
+void MainWindow::show_in_out() {
+    show_chart();
 
-    if(!file.exists() || !file.open(QFile::ReadOnly | QFile::Text)) {
+    return;
+}
+
+
+void MainWindow::show_chart() {
+    char* fileName = "./ledger.txt";
+    ledger_entry entry;
+    if (parse_entry(fileName, &entry) == -1 ) {
         return;
     }
-    printf("a\n");
-
-    QTextStream stream(&file);
-    QString line;
 
     model->removeRows(0, model->rowCount(QModelIndex()), QModelIndex());
 
-    int row = 0;
-    double total = 0;
-    line = stream.readLine();
-    total = stream.readLine().toDouble();
-    line = stream.readLine();
-    do {
-        line = stream.readLine();
-        if (!line.isEmpty()) {
+    int i = 0, row = 0;
+    double in_value = 0;
+    double out_value = 0;
+    int idx = ui->comboBox->currentIndex();
+    for (i = 0; i < entry.size; ++i) {
+        if (idx == 0 && entry.values[i] >= 0) {
             model->insertRows(row, 1, QModelIndex());
-
-            QStringList pieces = line.split(",", QString::SkipEmptyParts);
             model->setData(model->index(row, 0, QModelIndex()),
-                           pieces.value(0));
+                           QVariant(entry.labels[i]));
             model->setData(model->index(row, 1, QModelIndex()),
-                           QString::number(pieces.value(1).toDouble()/total));
+                           QString::number(entry.values[i]/entry.total));
             model->setData(model->index(row, 0, QModelIndex()),
-                           QColor(random_int()), Qt::DecorationRole);
-            row++;
+                           QColor(random_int(i, entry.size)), Qt::DecorationRole);
+            in_value += entry.values[i];
+            ++row;
+        } else if (idx == 1 && entry.values[i] <= 0) {
+            model->insertRows(row, 1, QModelIndex());
+            model->setData(model->index(row, 0, QModelIndex()),
+                           QVariant(entry.labels[i]));
+            model->setData(model->index(row, 1, QModelIndex()),
+                           QString::number(-entry.values[i]/entry.total));
+            model->setData(model->index(row, 0, QModelIndex()),
+                           QColor(random_int(i, entry.size)), Qt::DecorationRole);
+            out_value -= entry.values[i];
+            ++row;
         }
-    } while (!line.isEmpty());
+    }
 
-    file.close();
+    ui->inValue->setText(QString::number(in_value));
+    ui->outValue->setText(QString::number((out_value)));
+
+    return;
+}
+
+
+void MainWindow::update_statistics() {
+    ;
 
     return;
 }

@@ -26,6 +26,7 @@ public:
     void qt_add_entry(QString name);
     void save2file(char *fn);
     void show_chart();
+    void update_statistics();
     ~MainWindow();
 
 private slots:
@@ -34,6 +35,8 @@ private slots:
     void on_today_detail_clicked();
 
     void commit();
+
+    void show_in_out();
 
 private:
     Ui::MainWindow *ui;
