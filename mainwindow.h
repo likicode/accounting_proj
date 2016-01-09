@@ -42,7 +42,7 @@ private slots:
     QString initText();
     void setCss1();
     void setCss2();
-
+    void deleteLabel();
 
 private:
     Ui::MainWindow *ui;

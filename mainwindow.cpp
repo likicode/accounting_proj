@@ -12,6 +12,9 @@
 #include <QtWidgets>
 #include <QGridLayout>
 #include "pieview.h"
+#include <iostream>
+#include <stdlib.h>
+using namespace std;
 extern "C" {
 #include "file_client.h"
 }
@@ -47,6 +50,9 @@ MainWindow::MainWindow(QWidget *parent) :
     setupViews();
     //export
     connect(ui->pushButton, SIGNAL(clicked(bool)), this, SLOT(on_actionSave_as_triggered()));
+
+    //delete
+    connect(ui->comment, SIGNAL(clicked(bool)), this, SLOT(deleteLabel()));
 
     //Theme
     connect(ui->actionDark, SIGNAL(triggered()), this, SLOT(setCss1()));
@@ -89,7 +95,7 @@ void MainWindow::qt_add_entry(QString name) {
 
 
 void MainWindow::save2file(char *fn) {
-    int i = 0, num_row = ui->formLayout->rowCount();
+    int i = 0, num_row = ui->formLayout->count();
     QLabel *label = NULL;
     QLineEdit *widget = NULL;
     ledger_entry entry;
@@ -100,7 +106,7 @@ void MainWindow::save2file(char *fn) {
     entry.labels = NULL;
     entry.values = NULL;
 
-    for(i = 0; i < num_row; ++i) {
+    for(i = 0; i < (num_row-1)/2; ++i) {
         widget = qobject_cast<QLineEdit*>(ui->formLayout->itemAt(i*2+1)->widget());
         label = qobject_cast<QLabel*>(ui->formLayout->itemAt(i*2)->widget());
         add_entry(&entry, label->text().toLatin1().data(), widget->text().toDouble());
@@ -316,5 +322,21 @@ void MainWindow::setCss2() {
     }
     else {
 //        cout<<"error!!!!!!"<<endl;
+    }
+}
+
+void MainWindow::deleteLabel() {
+    int num = ui->comboBox_2->currentIndex() + 1;
+    int count = ui->formLayout->count();
+    cout<<count<<endl;
+    cout<<num<<endl;
+    if (num*2-1 > count) return;
+    else {
+    QWidget *p = ui->formLayout->itemAt(num*2-2)->widget();
+    ui->formLayout->takeAt(num*2-2)->widget();
+    p->deleteLater();
+    QWidget *p2 = ui->formLayout->itemAt(num*2-2)->widget();
+    ui->formLayout->takeAt(num*2-2)->widget();
+    p2->deleteLater();
     }
 }
