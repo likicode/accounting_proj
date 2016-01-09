@@ -211,7 +211,6 @@ void MainWindow::show_chart() {
     ledger_entry entry;
 
     prepare_entry(ui->comboBox_3->currentIndex(), &entry, ui->dateEdit->date().dayOfYear());
-    printf("======%d\n", ui->comboBox_3->currentIndex());
 
     model->removeRows(0, model->rowCount(QModelIndex()), QModelIndex());
 

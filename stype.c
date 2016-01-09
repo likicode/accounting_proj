@@ -158,7 +158,7 @@ int save_entry(char* fn, ledger_entry *entry) {
 void prepare_entry(int flag, ledger_entry *entry, int dayofyear) {
     int diff1 = 0, diff2 = 0, diff3 = 0;
     time_t tt = time(NULL);
-    struct tm* ttm= gmtime(&tt), *ettm = NULL;
+    struct tm ttm, *ettm = NULL;
     char *datum_folder = "./datum/", buffer[BUFFER_SIZE];
     DIR *dirp = NULL;
     struct dirent *dp = NULL;
@@ -168,6 +168,8 @@ void prepare_entry(int flag, ledger_entry *entry, int dayofyear) {
     entry->total = 0;
     entry->labels = NULL;
     entry->values = NULL;
+
+    memcpy(&ttm, gmtime(&tt), sizeof(struct tm));
 
     if ((dirp = opendir(datum_folder)) == NULL) {
         printf("open dir error\n");
@@ -188,7 +190,7 @@ void prepare_entry(int flag, ledger_entry *entry, int dayofyear) {
 
             switch (flag) {
                 case 0:
-                    if (ettm->tm_year == ttm->tm_year &&
+                    if (ettm->tm_year == ttm.tm_year &&
                             ettm->tm_yday == dayofyear - 1) {
                         merge_entry(entry, &tmpe);
                     }
@@ -196,19 +198,19 @@ void prepare_entry(int flag, ledger_entry *entry, int dayofyear) {
                 case 1:
                     diff1 = ettm->tm_wday - 0;
                     diff2 = 6 - ettm->tm_wday;
-                    diff3 = abs(ettm->tm_year - ttm->tm_year);
+                    diff3 = abs(ettm->tm_year - ttm.tm_year);
                     if (diff3 < 7 && (diff3 < diff1 || diff3 < diff2)) {
                         merge_entry(entry, &tmpe);
                     }
                     break;
                 case 2:
-                    if (ettm->tm_year == ttm->tm_year &&
-                            ettm->tm_mon == ttm->tm_mon) {
+                    if (ettm->tm_year == ttm.tm_year &&
+                            ettm->tm_mon == ttm.tm_mon) {
                         merge_entry(entry, &tmpe);
                     }
                     break;
                 case 3:
-                    if (ettm->tm_year == ttm->tm_year) {
+                    if (ettm->tm_year == ttm.tm_year) {
                         merge_entry(entry, &tmpe);
                     }
                     break;
