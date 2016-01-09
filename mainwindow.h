@@ -48,7 +48,7 @@ private:
 
     void setupModel();
     void setupViews();
-
+    void setupTableView();
     QAbstractItemModel *model;
     QAbstractItemView *pieChart;
     QItemSelectionModel *selectionModel;

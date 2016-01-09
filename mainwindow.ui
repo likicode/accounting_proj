@@ -207,7 +207,7 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,2">
+           <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_9">
               <item>
@@ -241,7 +241,7 @@
              </layout>
             </item>
             <item>
-             <widget class="QGraphicsView" name="graphicsView_3"/>
+             <widget class="QTableView" name="tableView"/>
             </item>
            </layout>
           </item>
@@ -277,11 +277,7 @@
      </layout>
     </item>
    </layout>
-   <zorder>horizontalLayoutWidget_3</zorder>
    <zorder></zorder>
-   <zorder>today_detail</zorder>
-   <zorder>comboBox</zorder>
-   <zorder>horizontalLayoutWidget_4</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
